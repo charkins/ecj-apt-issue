@@ -30,20 +30,23 @@ the eclipse compiler.
 
 ### FooX.java
 ```
-@X({true,true})
+package x;
+@x.X({true,true})
 public class FooX {
 }
 ```
 
 ### FooXX.java
 ```
-@X({true})
+package x;
+@x.X({true})
 public class FooXX {
 }
 ```
 
 ### FooXXX.java
 ```
+package x;
 public class FooXXX {
 }
 ```
@@ -63,25 +66,25 @@ executed to process the X annotation on the generated **BarXX.class**.
 #> ./gradlew clean ecjCompile
 > Task :compileJava
 Round 1:
-        input files: {Bar, Foo}
-        annotations: [X]
+        input files: {x.Foo, x.Bar}
+        annotations: [x.X]
         last round: false
-Processor org.gradle.api.internal.tasks.compile.processing.TimeTrackingProcessor matches [/X] and returns false.
-Processor org.gradle.api.internal.tasks.compile.processing.SupportedOptionsCollectingProcessor matches [/X] and returns false.
+Processor org.gradle.api.internal.tasks.compile.processing.TimeTrackingProcessor matches [/x.X] and returns false.
+Processor org.gradle.api.internal.tasks.compile.processing.SupportedOptionsCollectingProcessor matches [/x.X] and returns false.
 Round 2:
-        input files: {BarX, FooX}
-        annotations: [X]
+        input files: {x.FooX, x.BarX}
+        annotations: [x.X]
         last round: false
-Processor org.gradle.api.internal.tasks.compile.processing.TimeTrackingProcessor matches [/X] and returns false.
-Processor org.gradle.api.internal.tasks.compile.processing.SupportedOptionsCollectingProcessor matches [/X] and returns false.
+Processor org.gradle.api.internal.tasks.compile.processing.TimeTrackingProcessor matches [/x.X] and returns false.
+Processor org.gradle.api.internal.tasks.compile.processing.SupportedOptionsCollectingProcessor matches [/x.X] and returns false.
 Round 3:
-        input files: {FooXX, BarXX}
-        annotations: [X]
+        input files: {x.FooXX, x.BarXX}
+        annotations: [x.X]
         last round: false
-Processor org.gradle.api.internal.tasks.compile.processing.TimeTrackingProcessor matches [/X] and returns false.
-Processor org.gradle.api.internal.tasks.compile.processing.SupportedOptionsCollectingProcessor matches [/X] and returns false.
+Processor org.gradle.api.internal.tasks.compile.processing.TimeTrackingProcessor matches [/x.X] and returns false.
+Processor org.gradle.api.internal.tasks.compile.processing.SupportedOptionsCollectingProcessor matches [/x.X] and returns false.
 Round 4:
-        input files: {FooXXX, BarXXX}
+        input files: {x.FooXXX, x.BarXXX}
         annotations: []
         last round: false
 Processor org.gradle.api.internal.tasks.compile.processing.TimeTrackingProcessor matches [] and returns false.
@@ -92,62 +95,63 @@ Round 5:
         last round: true
 
 > Task :ecjCompile
-[parsing    /tmp/ecj-apt-issue/src/main/java/Bar.java - #1/2]
-[parsing    /tmp/ecj-apt-issue/src/main/java/Foo.java - #2/2]
+[parsing    /home/casey/projects/ecj-apt-issue/src/main/java/x/Foo.java - #1/2]
+[parsing    /home/casey/projects/ecj-apt-issue/src/main/java/x/Bar.java - #2/2]
 [reading    java/lang/Object.class]
-[reading    X.class]
+[reading    x/X.class]
 Round 1:
-        input files: {Foo,Bar}
-        annotations: [X]
+        input files: {x.Foo,x.Bar}
+        annotations: [x.X]
         last round: false
-Discovered processor service XProcessor
-  supporting [X]
-  in jar:file:/tmp/ecj-apt-issue/processor/build/libs/processor-1.0.jar!/
-Processor XProcessor matches [X] and returns false
-[parsing    /tmp/ecj-apt-issue/build/ecj/generated/BarX.java - #1/2]
-[parsing    /tmp/ecj-apt-issue/build/ecj/generated/FooX.java - #2/2]
+Discovered processor service x.XProcessor
+  supporting [x.X]
+  in jar:file:/home/casey/projects/ecj-apt-issue/processor/build/libs/processor-1.0.jar!/
+Processor x.XProcessor matches [x.X] and returns false
+[parsing    /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/BarX.java - #1/2]
+[parsing    /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/FooX.java - #2/2]
 Round 2:
-        input files: {FooX,BarX}
-        annotations: [X]
+        input files: {x.FooX,x.BarX}
+        annotations: [x.X]
         last round: false
-Processor XProcessor matches [X] and returns false
-[parsing    /tmp/ecj-apt-issue/build/ecj/generated/FooXX.java - #1/1]
+Processor x.XProcessor matches [x.X] and returns false
+[parsing    /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/FooXX.java - #1/1]
 Round 3:
-        input files: {FooXX}
-        annotations: [X]
+        input files: {x.FooXX}
+        annotations: [x.X]
         last round: false
-Processor XProcessor matches [X] and returns false
-[parsing    /tmp/ecj-apt-issue/build/ecj/generated/FooXXX.java - #1/1]
+Processor x.XProcessor matches [x.X] and returns false
+[parsing    /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/FooXXX.java - #1/1]
 Round 4:
-        input files: {FooXXX}
+        input files: {x.FooXXX}
         annotations: []
         last round: false
-Processor XProcessor matches [] and returns false
+Processor x.XProcessor matches [] and returns false
 Round 5:
         input files: {}
         annotations: []
         last round: true
-[analyzing  /tmp/ecj-apt-issue/src/main/java/Bar.java - #1/6]
-[analyzing  /tmp/ecj-apt-issue/src/main/java/Foo.java - #2/6]
-[writing    Bar.class - #1]
-[completed  /tmp/ecj-apt-issue/src/main/java/Bar.java - #1/6]
-[analyzing  /tmp/ecj-apt-issue/build/ecj/generated/BarX.java - #3/6]
-[writing    Foo.class - #2]
-[completed  /tmp/ecj-apt-issue/src/main/java/Foo.java - #2/6]
-[analyzing  /tmp/ecj-apt-issue/build/ecj/generated/FooX.java - #4/6]
-[writing    BarX.class - #3]
-[completed  /tmp/ecj-apt-issue/build/ecj/generated/BarX.java - #3/6]
-[analyzing  /tmp/ecj-apt-issue/build/ecj/generated/FooXX.java - #5/6]
-[writing    FooX.class - #4]
-[completed  /tmp/ecj-apt-issue/build/ecj/generated/FooX.java - #4/6]
-[analyzing  /tmp/ecj-apt-issue/build/ecj/generated/FooXXX.java - #6/6]
-[writing    FooXX.class - #5]
-[completed  /tmp/ecj-apt-issue/build/ecj/generated/FooXX.java - #5/6]
-[writing    FooXXX.class - #6]
-[completed  /tmp/ecj-apt-issue/build/ecj/generated/FooXXX.java - #6/6]
+[analyzing  /home/casey/projects/ecj-apt-issue/src/main/java/x/Foo.java - #1/6]
+[analyzing  /home/casey/projects/ecj-apt-issue/src/main/java/x/Bar.java - #2/6]
+[writing    x/Foo.class - #1]
+[analyzing  /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/BarX.java - #3/6]
+[completed  /home/casey/projects/ecj-apt-issue/src/main/java/x/Foo.java - #1/6]
+[writing    x/Bar.class - #2]
+[completed  /home/casey/projects/ecj-apt-issue/src/main/java/x/Bar.java - #2/6]
+[analyzing  /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/FooX.java - #4/6]
+[writing    x/BarX.class - #3]
+[completed  /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/BarX.java - #3/6]
+[analyzing  /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/FooXX.java - #5/6]
+[writing    x/FooX.class - #4]
+[completed  /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/FooX.java - #4/6]
+[analyzing  /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/FooXXX.java - #6/6]
+[writing    x/FooXX.class - #5]
+[completed  /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/FooXX.java - #5/6]
+[writing    x/FooXXX.class - #6]
+[completed  /home/casey/projects/ecj-apt-issue/build/ecj/generated/x/FooXXX.java - #6/6]
 [6 units compiled]
 [6 .class files generated]
 
-BUILD SUCCESSFUL in 2s
+BUILD SUCCESSFUL in 1s
 11 actionable tasks: 11 executed
 ```
+
