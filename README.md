@@ -2,6 +2,8 @@ The eclipse compiler appears to miss execution of annotation processors for
 annotations on classes generated directly in previous processing rounds.
 This project is intended to demonstrate this issue.
 
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=565214
+
 This project is structured as a main project and two subprojects. The main
 project build.gradle has an ```ecjCompile``` task which will execute the ecj
 compiler on the main project source. Both the ecj compiler and the standard
