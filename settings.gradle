@@ -1,0 +1,3 @@
+rootProject.name = 'ecj-apt-issue'
+include 'annotation', 'processor'
+

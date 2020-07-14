@@ -1,0 +1,44 @@
+plugins {
+    id "com.diffplug.eclipse.apt" version "3.23.0"
+}
+
+allprojects {
+    apply plugin: 'java'
+
+    version = '1.0'
+
+    repositories {
+        jcenter()
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.toVersion('11')
+        targetCompatibility = JavaVersion.toVersion('11')
+    }
+}
+
+configurations {
+	ecj
+}
+
+
+dependencies {
+	annotationProcessor project(":processor")
+	implementation project(":annotation")
+	ecj 'org.eclipse.jdt:ecj:3.22.0'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ["-XprintProcessorInfo","-XprintRounds"]
+}
+
+task ecjCompile(type: JavaExec, dependsOn: 'assemble') {
+	classpath = sourceSets.main.compileClasspath + configurations.annotationProcessor + configurations.ecj
+	main = 'org.eclipse.jdt.internal.compiler.batch.Main'
+	args = [
+		'-source','11', '-target','11', '-XprintProcessorInfo', '-XprintRounds', '-verbose',
+		'-d', "${project.buildDir}/ecj/classes", '-s', "${project.buildDir}/ecj/generated",
+		*sourceSets.main.allJava.files.toArray()
+	]
+	
+}

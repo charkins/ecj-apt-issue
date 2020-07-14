@@ -1,0 +1,4 @@
+dependencies {
+	implementation project(":annotation")
+	implementation 'org.ow2.asm:asm:8.0.1'
+}
