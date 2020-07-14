@@ -1,3 +1,4 @@
+package x;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -54,11 +55,14 @@ public class XProcessor extends AbstractProcessor {
                         nvals[i - 1] = vals[i];
 
                     String annotatedClassName = ((TypeElement) element).getQualifiedName().toString();
+                    int dot = annotatedClassName.lastIndexOf(".");
+                    String pkg = (dot>=0 ? annotatedClassName.substring(0,dot) : null);
+                    String name = (dot>=0 ? annotatedClassName.substring(dot+1) : annotatedClassName ) + suffix;
 
                     if (vals[0])
-                        generateJava(annotatedClassName, nvals);
+                        generateJava(pkg, name, nvals);
                     else
-                        generateClass(annotatedClassName, nvals);
+                        generateClass(pkg, name, nvals);
 
                 } catch (Exception e) {
                     processingEnv.getMessager().printMessage(Kind.ERROR, e.getMessage());
@@ -69,13 +73,14 @@ public class XProcessor extends AbstractProcessor {
         return false;
     }
 
-    private void generateJava(String annotatedClassName, boolean[] nextValues) throws IOException {
-        String sn = annotatedClassName + suffix;
+    private void generateJava(String pkg, String name, boolean[] nextValues) throws IOException {
+        String fqn = pkg!=null ? pkg + "." + name : name;
 
-        JavaFileObject java = processingEnv.getFiler().createSourceFile(sn);
+        JavaFileObject java = processingEnv.getFiler().createSourceFile(fqn);
         try (PrintWriter out = new PrintWriter(java.openWriter())) {
+            if(pkg!=null) out.println("package " + pkg + ";");
             if (nextValues.length > 0) {
-                out.print("@" + X.class.getSimpleName() + "({");
+                out.print("@" + X.class.getName() + "({");
                 for (int i = 0; i < nextValues.length; i++) {
                     if (i > 0)
                         out.print(",");
@@ -87,26 +92,24 @@ public class XProcessor extends AbstractProcessor {
                 out.println("})");
             }
 
-            out.println("public class " + sn + " {");
+            out.println("public class " + name + " {");
             out.println("}");
         }
-
     }
 
-    private void generateClass(String annotatedClassName, boolean[] nextValues) throws IOException {
-        String sn = annotatedClassName + suffix;
+    private void generateClass(String pkg, String name, boolean[] nextValues) throws IOException {
+        String fqn = pkg!=null ? pkg + "." + name : name;
 
         ClassWriter cw = new ClassWriter(0);
-        cw.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, sn, null, "java/lang/Object", null);
+        cw.visit(Opcodes.V1_6, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, fqn.replaceAll("\\.","/"), null, "java/lang/Object", null);
         if (nextValues.length > 0) {
             cw.visitAnnotation(Type.getType(X.class).getDescriptor(), true).visit("value", nextValues);
         }
         cw.visitEnd();
 
-        JavaFileObject clazz = processingEnv.getFiler().createClassFile(sn);
+        JavaFileObject clazz = processingEnv.getFiler().createClassFile(fqn);
         try (OutputStream out = clazz.openOutputStream()) {
             out.write(cw.toByteArray());
         }
-
     }
 }
